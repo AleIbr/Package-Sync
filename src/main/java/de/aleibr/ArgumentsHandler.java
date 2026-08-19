@@ -2,7 +2,7 @@ package de.aleibr;
 
 public class ArgumentsHandler {
 
-    public static void ArgsHandler(String[] args){
+    public static void argsHandler(String[] args){
         for(String arg : args){
             switch(arg){
                 default:

@@ -2,6 +2,6 @@ package de.aleibr;
 
 public class Main {
     public static void main(String[] args) {
-        ArgumentsHandler.ArgsHandler(args);
+        ArgumentsHandler.argsHandler(args);
     }
 }
