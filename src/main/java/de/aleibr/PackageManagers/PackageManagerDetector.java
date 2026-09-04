@@ -3,13 +3,13 @@ package de.aleibr.PackageManagers;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class PackageManagerDetector {
 
-    private static final String[] packageManagers = {
-            "apt",
-            "pacman"
-    };
+    private static final Map<String, PackageManagerInterface> packageManagers = Map.of(
+            "apt", new AptPackageManager()
+    );
 
     public static List<String> detectPackageManagers(){
         List<String> installedPackageManagers = new ArrayList<>();
