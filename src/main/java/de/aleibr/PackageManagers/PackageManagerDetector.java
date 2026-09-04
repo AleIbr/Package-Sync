@@ -1,21 +1,20 @@
 package de.aleibr.PackageManagers;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PackageManagerDetector {
 
-    private static final String[] packageManagers = {
-            "apt",
-            "pacman"
-    };
+    private static final Map<String, PackageManagerInterface> packageManagers = Map.of(
+            "apt", new AptPackageManager()
+    );
 
-    public static List<String> detectPackageManagers(){
-        List<String> installedPackageManagers = new ArrayList<>();
-        for(String packageManager : packageManagers){
+    public static Map<String, PackageManagerInterface> detectPackageManagers(){
+        Map<String, PackageManagerInterface> installedPackageManagers = new HashMap<>();
+        for(String packageManager : packageManagers.keySet()){
             if(isInstalled(packageManager)){
-                installedPackageManagers.add(packageManager);
+                installedPackageManagers.put(packageManager, packageManagers.get(packageManager));
             }
         }
         return installedPackageManagers;
