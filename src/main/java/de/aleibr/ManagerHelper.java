@@ -21,7 +21,7 @@ public class ManagerHelper {
             packages.putAll(availablePackageManagers.get(packageManager).exportExplicit());
             packages.putAll(availablePackageManagers.get(packageManager).exportDependencies());
         }
-        System.out.println(packages);
+        YMLFileHelper.createYMLFile(packages);
     }
 
 }
