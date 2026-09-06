@@ -7,7 +7,8 @@ import java.util.Map;
 public class PackageManagerDetector {
 
     private static final Map<String, PackageManagerInterface> packageManagers = Map.of(
-            "apt", new AptPackageManager()
+            "apt", new AptPackageManager(),
+            "pacman", new PacmanPackageManager()
     );
 
     public static Map<String, PackageManagerInterface> detectPackageManagers(){
