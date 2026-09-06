@@ -8,7 +8,8 @@ public class PackageManagerDetector {
 
     private static final Map<String, PackageManagerInterface> packageManagers = Map.of(
             "apt", new AptPackageManager(),
-            "pacman", new PacmanPackageManager()
+            "pacman", new PacmanPackageManager(),
+            "snap", new SnapPackageManager()
     );
 
     public static Map<String, PackageManagerInterface> detectPackageManagers(){
