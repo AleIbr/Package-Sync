@@ -5,8 +5,12 @@ import java.util.Map;
 
 public interface PackageManagerInterface {
 
-    Map<String, List<String>> exportExplicit();
+    default Map<String, List<String>> exportExplicit(){
+        return Map.of();
+    }
 
-    Map<String, List<String>>exportDependencies();
+    default Map<String, List<String>>exportDependencies(){
+        return Map.of();
+    }
 
 }
