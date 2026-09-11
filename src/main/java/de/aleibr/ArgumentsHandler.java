@@ -8,7 +8,7 @@ public class ArgumentsHandler {
         Option export = Option.builder("E")
                 .longOpt("export")
                 .optionalArg(true)
-                .argName("FILE")
+                .argName("FILEPATH")
                 .desc("exports all packages")
                 .get();
 
@@ -27,7 +27,11 @@ public class ArgumentsHandler {
             for(Option option : cmd.getOptions()){
                 switch(option.getLongOpt()){
                     case "export":
-                        helper.export();
+                        String filePath = cmd.getOptionValue("export", "");
+                        if(!filePath.isBlank()){
+                            filePath = filePath + "/";
+                        }
+                        helper.export(filePath);
                         break;
                 }
             }
