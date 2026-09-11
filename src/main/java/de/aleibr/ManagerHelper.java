@@ -15,13 +15,13 @@ public class ManagerHelper {
         availablePackageManagers = PackageManagerDetector.detectPackageManagers();
     }
 
-    public void export(){
+    public void export(String filePath){
         Map<String, List<String>> packages = new HashMap<>();
         for(String packageManager : availablePackageManagers.keySet()){
             packages.putAll(availablePackageManagers.get(packageManager).exportExplicit());
             packages.putAll(availablePackageManagers.get(packageManager).exportDependencies());
         }
-        YMLFileHelper.createYMLFile(packages, "Export-All");
+        YMLFileHelper.createYMLFile(packages, "Export-All", filePath);
     }
 
 }
