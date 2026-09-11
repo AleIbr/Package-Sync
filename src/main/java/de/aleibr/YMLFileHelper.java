@@ -10,12 +10,12 @@ import java.util.Map;
 
 public class YMLFileHelper {
 
-    public static void createYMLFile(Map<String, List<String>> packages, String name){
+    public static void createYMLFile(Map<String, List<String>> packages, String name, String filePath){
         DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
 
         Yaml yaml = new Yaml(options);
-        try(FileWriter writer = new FileWriter(name + ".yml")){
+        try(FileWriter writer = new FileWriter(filePath  + name + ".yml")){
             yaml.dump(packages, writer);
         } catch (IOException ignored) {
             throw  new RuntimeException("Can't create YML file");
