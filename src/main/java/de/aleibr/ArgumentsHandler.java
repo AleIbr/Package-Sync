@@ -11,9 +11,14 @@ public class ArgumentsHandler {
                 .argName("FILEPATH")
                 .desc("exports all packages")
                 .get();
+        Option help = Option.builder("H")
+                .longOpt("help")
+                .desc("showing all existing commands")
+                .get();
 
         OptionGroup operations = new OptionGroup();
         operations.addOption(export);
+        operations.addOption(help);
         operations.setRequired(true);
 
         Options options = new Options();
@@ -32,6 +37,10 @@ public class ArgumentsHandler {
                             filePath = filePath + "/";
                         }
                         helper.export(filePath);
+                        break;
+                    case "help":
+                        HelpFormatter helpFormatter = new HelpFormatter();
+                        helpFormatter.printHelp("help", options);
                         break;
                 }
             }
