@@ -22,4 +22,8 @@ public class YMLFileHelper {
         }
     }
 
+    public static Map<String, List<String>> readYMLFile(String filePath){
+        return Map.of();
+    }
+
 }
