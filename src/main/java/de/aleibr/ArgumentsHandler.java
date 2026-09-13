@@ -17,6 +17,12 @@ public class ArgumentsHandler {
                 .argName("FILEPATH")
                 .desc("exports all packages that were manually installed")
                 .get();
+        Option dependencyExport = Option.builder("DE")
+                .longOpt("dependencyExport")
+                .optionalArg(true)
+                .argName("FILEPATH")
+                .desc("exports all dependency packages")
+                .get();
         Option help = Option.builder("H")
                 .longOpt("help")
                 .desc("showing all existing commands")
@@ -25,6 +31,7 @@ public class ArgumentsHandler {
         OptionGroup operations = new OptionGroup();
         operations.addOption(export);
         operations.addOption(explicitExport);
+        operations.addOption(dependencyExport);
         operations.addOption(help);
         operations.setRequired(true);
 
@@ -51,6 +58,13 @@ public class ArgumentsHandler {
                             explicitExportPath = explicitExportPath + "/";
                         }
                         helper.explicitExport(explicitExportPath);
+                        break;
+                    case "dependencyExport":
+                        String dependencyExportPath = cmd.getOptionValue("explicitExport", "");
+                        if(!dependencyExportPath.isBlank()){
+                            dependencyExportPath = dependencyExportPath + "/";
+                        }
+                        helper.dependencyExport(dependencyExportPath);
                         break;
                     case "help":
                         HelpFormatter helpFormatter = new HelpFormatter();
