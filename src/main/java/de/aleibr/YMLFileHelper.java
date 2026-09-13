@@ -3,6 +3,7 @@ package de.aleibr;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
@@ -18,12 +19,17 @@ public class YMLFileHelper {
         try(FileWriter writer = new FileWriter(filePath  + name + ".yml")){
             yaml.dump(packages, writer);
         } catch (IOException ignored) {
-            throw  new RuntimeException("Can't create YML file");
+            throw new RuntimeException("Can't create YML file");
         }
     }
 
     public static Map<String, List<String>> readYMLFile(String filePath){
-        return Map.of();
+        Yaml yaml = new Yaml();
+        try(FileReader reader = new FileReader(filePath)){
+            return yaml.load(reader);
+        }catch(IOException e){
+            throw new RuntimeException("Can't read YML file");
+        }
     }
 
 }
