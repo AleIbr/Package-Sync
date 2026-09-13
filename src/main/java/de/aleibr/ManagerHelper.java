@@ -32,4 +32,12 @@ public class ManagerHelper {
         YMLFileHelper.createYMLFile(packages, "Export-Explicit", filePath);
     }
 
+    public void dependencyExport(String filePath){
+        Map<String, List<String>> packages = new HashMap<>();
+        for(String packageManager : availablePackageManagers.keySet()){
+            packages.putAll(availablePackageManagers.get(packageManager).exportDependencies());
+        }
+        YMLFileHelper.createYMLFile(packages, "Export-Dependencies", filePath);
+    }
+
 }
