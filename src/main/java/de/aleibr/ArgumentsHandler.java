@@ -11,6 +11,12 @@ public class ArgumentsHandler {
                 .argName("FILEPATH")
                 .desc("exports all packages")
                 .get();
+        Option explicitExport = Option.builder("EE")
+                .longOpt("explicitExport")
+                .optionalArg(true)
+                .argName("FILEPATH")
+                .desc("exports all packages that were manually installed")
+                .get();
         Option help = Option.builder("H")
                 .longOpt("help")
                 .desc("showing all existing commands")
@@ -18,6 +24,7 @@ public class ArgumentsHandler {
 
         OptionGroup operations = new OptionGroup();
         operations.addOption(export);
+        operations.addOption(explicitExport);
         operations.addOption(help);
         operations.setRequired(true);
 
@@ -32,11 +39,18 @@ public class ArgumentsHandler {
             for(Option option : cmd.getOptions()){
                 switch(option.getLongOpt()){
                     case "export":
-                        String filePath = cmd.getOptionValue("export", "");
-                        if(!filePath.isBlank()){
-                            filePath = filePath + "/";
+                        String exportPath = cmd.getOptionValue("export", "");
+                        if(!exportPath.isBlank()){
+                            exportPath = exportPath + "/";
                         }
-                        helper.export(filePath);
+                        helper.export(exportPath);
+                        break;
+                    case "explicitExport":
+                        String explicitExportPath = cmd.getOptionValue("explicitExport", "");
+                        if(!explicitExportPath.isBlank()){
+                            explicitExportPath = explicitExportPath + "/";
+                        }
+                        helper.explicitExport(explicitExportPath);
                         break;
                     case "help":
                         HelpFormatter helpFormatter = new HelpFormatter();

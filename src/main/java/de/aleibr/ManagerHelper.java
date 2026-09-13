@@ -24,4 +24,12 @@ public class ManagerHelper {
         YMLFileHelper.createYMLFile(packages, "Export-All", filePath);
     }
 
+    public void explicitExport(String filePath){
+        Map<String, List<String>> packages = new HashMap<>();
+        for(String packageManager : availablePackageManagers.keySet()){
+            packages.putAll(availablePackageManagers.get(packageManager).exportExplicit());
+        }
+        YMLFileHelper.createYMLFile(packages, "Export-Explicit", filePath);
+    }
+
 }
