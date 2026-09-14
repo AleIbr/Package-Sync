@@ -15,6 +15,6 @@ public interface PackageManagerInterface {
 
     default void importExplicit(List<String> packages){}
 
-    default  void importDependencies(List<String> packages){}
+    default void importDependencies(List<String> packages){}
 
 }
