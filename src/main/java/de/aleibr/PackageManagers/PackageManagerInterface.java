@@ -13,4 +13,8 @@ public interface PackageManagerInterface {
         return Map.of();
     }
 
+    default void importExplicit(List<String> packages){}
+
+    default void importDependencies(List<String> packages){}
+
 }
