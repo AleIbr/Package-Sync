@@ -19,4 +19,18 @@ public class SnapPackageManager implements PackageManagerInterface{
         }
     }
 
+    @Override
+    public void importPackages(List<String> packages){
+        try{
+            Process process;
+            for(String currentPackage : packages){
+                process = new ProcessBuilder("sudo", "snap", "install", currentPackage).inheritIO().start();
+                process.waitFor();
+            }
+        }catch(IOException | InterruptedException e){
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Can't import packages: \n" + e);
+        }
+    }
+
 }
