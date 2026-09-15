@@ -30,4 +30,19 @@ public class PacmanPackageManager implements PackageManagerInterface{
             return  Map.of();
         }
     }
+
+    @Override
+    public void importPackages(List<String> packages){
+        try{
+            Process process;
+            for(String currentPackage : packages){
+                process = new ProcessBuilder("sudo", "pacman", "-S", "--noconfirm", currentPackage).inheritIO().start();
+                process.waitFor();
+            }
+        }catch(IOException | InterruptedException e){
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Can't import packages: \n" + e);
+        }
+    }
+
 }
