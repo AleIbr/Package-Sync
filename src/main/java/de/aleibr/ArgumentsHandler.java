@@ -74,6 +74,9 @@ public class ArgumentsHandler {
                         }
                         helper.dependencyExport(dependencyExportPath);
                         break;
+                    case "import":
+                        helper.importPackages(cmd.getOptionValue("import"));
+                        break;
                     case "help":
                         HelpFormatter helpFormatter = new HelpFormatter();
                         helpFormatter.printHelp("help", options);
