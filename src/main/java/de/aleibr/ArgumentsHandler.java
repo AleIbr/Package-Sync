@@ -24,6 +24,12 @@ public class ArgumentsHandler {
                 .argName("FILEPATH")
                 .desc("exports all dependency packages")
                 .get();
+        Option importPackages = Option.builder("I")
+                .longOpt("import")
+                .hasArg()
+                .argName("FILE")
+                .desc("imports all packages within the YML file")
+                .get();
         Option help = Option.builder("H")
                 .longOpt("help")
                 .desc("showing all existing commands")
@@ -33,6 +39,7 @@ public class ArgumentsHandler {
         operations.addOption(export);
         operations.addOption(explicitExport);
         operations.addOption(dependencyExport);
+        operations.addOption(importPackages);
         operations.addOption(help);
         operations.setRequired(true);
 
@@ -66,6 +73,9 @@ public class ArgumentsHandler {
                             dependencyExportPath = dependencyExportPath + "/";
                         }
                         helper.dependencyExport(dependencyExportPath);
+                        break;
+                    case "import":
+                        helper.importPackages(cmd.getOptionValue("import"));
                         break;
                     case "help":
                         HelpFormatter helpFormatter = new HelpFormatter();
