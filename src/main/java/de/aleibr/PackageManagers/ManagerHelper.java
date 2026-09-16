@@ -1,7 +1,6 @@
-package de.aleibr;
+package de.aleibr.PackageManagers;
 
-import de.aleibr.PackageManagers.PackageManagerDetector;
-import de.aleibr.PackageManagers.PackageManagerInterface;
+import de.aleibr.YMLFileHelper;
 
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +37,17 @@ public class ManagerHelper {
             packages.putAll(availablePackageManagers.get(packageManager).exportDependencies());
         }
         YMLFileHelper.createYMLFile(packages, "Export-Dependencies", filePath);
+    }
+
+    public void importPackages(String filePath){
+        Map<String, List<String>> packages = YMLFileHelper.readYMLFile(filePath);
+        for(String packageSet : packages.keySet()){
+            for(String packageManager : availablePackageManagers.keySet()){
+                if(packageSet.split("\\|")[0].equals(packageManager)){
+                    availablePackageManagers.get(packageManager).importPackages(packages.get(packageManager));
+                }
+            }
+        }
     }
 
 }
