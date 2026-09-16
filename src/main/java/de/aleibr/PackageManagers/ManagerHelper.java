@@ -1,7 +1,6 @@
-package de.aleibr;
+package de.aleibr.PackageManagers;
 
-import de.aleibr.PackageManagers.PackageManagerDetector;
-import de.aleibr.PackageManagers.PackageManagerInterface;
+import de.aleibr.YMLFileHelper;
 
 import java.util.HashMap;
 import java.util.List;
