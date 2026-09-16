@@ -44,7 +44,7 @@ public class ManagerHelper {
         for(String packageSet : packages.keySet()){
             for(String packageManager : availablePackageManagers.keySet()){
                 if(packageSet.split("\\|")[0].equals(packageManager)){
-                    availablePackageManagers.get(packageManager).importPackages(packages.get(packageManager));
+                    availablePackageManagers.get(packageManager).importPackages(packages.get(packageSet));
                 }
             }
         }
