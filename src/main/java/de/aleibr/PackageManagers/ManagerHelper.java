@@ -40,7 +40,14 @@ public class ManagerHelper {
     }
 
     public void importPackages(String filePath){
+        Map<String, List<String>> packages = YMLFileHelper.readYMLFile(filePath);
+        for(String packageSet : packages.keySet()){
+            for(String packageManager : availablePackageManagers.keySet()){
+                if(packageSet.split("\\|")[0].equals(packageManager)){
 
+                }
+            }
+        }
     }
 
 }
