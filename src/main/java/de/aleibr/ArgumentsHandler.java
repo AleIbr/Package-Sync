@@ -85,7 +85,7 @@ public class ArgumentsHandler {
                         break;
                     case "import":
                         if(cmd.hasOption("force")){
-
+                            helper.forceImportPackages(cmd.getOptionValue("import"));
                         }else{
                             helper.importPackages(cmd.getOptionValue("import"));
                         }
