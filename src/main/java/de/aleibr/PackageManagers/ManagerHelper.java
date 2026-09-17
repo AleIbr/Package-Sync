@@ -50,4 +50,13 @@ public class ManagerHelper {
         }
     }
 
+    public void forceImportPackages(String filePath){
+        Map<String, List<String>> packages = YMLFileHelper.readYMLFile(filePath);
+        for(String packageSet : packages.keySet()){
+            for(String packageManager : availablePackageManagers.keySet()){
+                availablePackageManagers.get(packageManager).importPackages(packages.get(packageSet));
+            }
+        }
+    }
+
 }
