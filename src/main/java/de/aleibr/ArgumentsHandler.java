@@ -35,6 +35,11 @@ public class ArgumentsHandler {
                 .desc("showing all existing commands")
                 .get();
 
+        Option force = Option.builder("f")
+                .longOpt("force")
+                .desc("enables force import mode")
+                .get();
+
         OptionGroup operations = new OptionGroup();
         operations.addOption(export);
         operations.addOption(explicitExport);
@@ -43,8 +48,12 @@ public class ArgumentsHandler {
         operations.addOption(help);
         operations.setRequired(true);
 
+        OptionGroup flags = new OptionGroup();
+        flags.addOption(force);
+
         Options options = new Options();
         options.addOptionGroup(operations);
+        options.addOptionGroup(flags);
         ManagerHelper helper = new ManagerHelper();
 
         CommandLineParser parser = new DefaultParser();
