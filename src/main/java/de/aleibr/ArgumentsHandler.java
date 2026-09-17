@@ -77,14 +77,18 @@ public class ArgumentsHandler {
                         helper.explicitExport(explicitExportPath);
                         break;
                     case "dependencyExport":
-                        String dependencyExportPath = cmd.getOptionValue("explicitExport", "");
+                        String dependencyExportPath = cmd.getOptionValue("dependencyExport", "");
                         if(!dependencyExportPath.isBlank()){
                             dependencyExportPath = dependencyExportPath + "/";
                         }
                         helper.dependencyExport(dependencyExportPath);
                         break;
                     case "import":
-                        helper.importPackages(cmd.getOptionValue("import"));
+                        if(cmd.hasOption("force")){
+
+                        }else{
+                            helper.importPackages(cmd.getOptionValue("import"));
+                        }
                         break;
                     case "help":
                         HelpFormatter helpFormatter = new HelpFormatter();
