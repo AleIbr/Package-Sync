@@ -14,7 +14,8 @@ public class PackageManagerDetector {
             "aptitude", new AptitudePackageManager(),
             "dnf", new DnfPackageManager(),
             "dnf5", new Dnf5PackageManager(),
-            "yum", new YumPackageManager()
+            "yum", new YumPackageManager(),
+            "microdnf", new MicrodnfPackageManager()
     );
 
     public static Map<String, PackageManagerInterface> detectPackageManagers(){
