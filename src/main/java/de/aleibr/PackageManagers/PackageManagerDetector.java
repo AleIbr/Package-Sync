@@ -11,7 +11,8 @@ public class PackageManagerDetector {
             "pacman", new PacmanPackageManager(),
             "snap", new SnapPackageManager(),
             "dpkg", new DpkgPackageManager(),
-            "aptitude", new AptitudePackageManager()
+            "aptitude", new AptitudePackageManager(),
+            "dnf", new DnfPackageManager()
     );
 
     public static Map<String, PackageManagerInterface> detectPackageManagers(){
