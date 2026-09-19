@@ -12,7 +12,8 @@ public class PackageManagerDetector {
             "snap", new SnapPackageManager(),
             "dpkg", new DpkgPackageManager(),
             "aptitude", new AptitudePackageManager(),
-            "dnf", new DnfPackageManager()
+            "dnf", new DnfPackageManager(),
+            "dnf5", new Dnf5PackageManager()
     );
 
     public static Map<String, PackageManagerInterface> detectPackageManagers(){
