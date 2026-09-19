@@ -13,7 +13,8 @@ public class PackageManagerDetector {
             "dpkg", new DpkgPackageManager(),
             "aptitude", new AptitudePackageManager(),
             "dnf", new DnfPackageManager(),
-            "dnf5", new Dnf5PackageManager()
+            "dnf5", new Dnf5PackageManager(),
+            "yum", new YumPackageManager()
     );
 
     public static Map<String, PackageManagerInterface> detectPackageManagers(){
