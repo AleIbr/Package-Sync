@@ -10,7 +10,8 @@ public class PackageManagerDetector {
             "apt", new AptPackageManager(),
             "pacman", new PacmanPackageManager(),
             "snap", new SnapPackageManager(),
-            "dpkg", new DpkgPackageManager()
+            "dpkg", new DpkgPackageManager(),
+            "aptitude", new AptitudePackageManager()
     );
 
     public static Map<String, PackageManagerInterface> detectPackageManagers(){
