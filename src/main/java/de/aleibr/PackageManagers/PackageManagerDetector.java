@@ -15,7 +15,8 @@ public class PackageManagerDetector {
             "dnf", new DnfPackageManager(),
             "dnf5", new Dnf5PackageManager(),
             "yum", new YumPackageManager(),
-            "microdnf", new MicrodnfPackageManager()
+            "microdnf", new MicrodnfPackageManager(),
+            "rpm", new RpmPackageManager()
     );
 
     public static Map<String, PackageManagerInterface> detectPackageManagers(){
