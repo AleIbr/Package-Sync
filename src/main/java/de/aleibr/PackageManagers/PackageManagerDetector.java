@@ -19,7 +19,8 @@ public class PackageManagerDetector {
             Map.entry("rpm", new RpmPackageManager()),
             Map.entry("tdnf", new TdnfPackageManager()),
             Map.entry("pamac", new PacmanPackageManager()),
-            Map.entry("yay", new YayPackageManager())
+            Map.entry("yay", new YayPackageManager()),
+            Map.entry("paru", new ParuPackageManager())
     );
 
     public static Map<String, PackageManagerInterface> detectPackageManagers(){
