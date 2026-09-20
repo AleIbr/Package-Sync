@@ -18,7 +18,8 @@ public class PackageManagerDetector {
             Map.entry("microdnf", new MicrodnfPackageManager()),
             Map.entry("rpm", new RpmPackageManager()),
             Map.entry("tdnf", new TdnfPackageManager()),
-            Map.entry("pamac", new PacmanPackageManager())
+            Map.entry("pamac", new PacmanPackageManager()),
+            Map.entry("yay", new YayPackageManager())
     );
 
     public static Map<String, PackageManagerInterface> detectPackageManagers(){
