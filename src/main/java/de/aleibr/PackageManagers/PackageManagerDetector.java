@@ -6,17 +6,18 @@ import java.util.Map;
 
 public class PackageManagerDetector {
 
-    private static final Map<String, PackageManagerInterface> packageManagers = Map.of(
-            "apt", new AptPackageManager(),
-            "pacman", new PacmanPackageManager(),
-            "snap", new SnapPackageManager(),
-            "dpkg", new DpkgPackageManager(),
-            "aptitude", new AptitudePackageManager(),
-            "dnf", new DnfPackageManager(),
-            "dnf5", new Dnf5PackageManager(),
-            "yum", new YumPackageManager(),
-            "microdnf", new MicrodnfPackageManager(),
-            "rpm", new RpmPackageManager()
+    private static final Map<String, PackageManagerInterface> packageManagers = Map.ofEntries(
+            Map.entry("apt", new AptPackageManager()),
+            Map.entry("pacman", new PacmanPackageManager()),
+            Map.entry("snap", new SnapPackageManager()),
+            Map.entry("dpkg", new DpkgPackageManager()),
+            Map.entry("aptitude", new AptitudePackageManager()),
+            Map.entry("dnf", new DnfPackageManager()),
+            Map.entry("dnf5", new Dnf5PackageManager()),
+            Map.entry("yum", new YumPackageManager()),
+            Map.entry("microdnf", new MicrodnfPackageManager()),
+            Map.entry("rpm", new RpmPackageManager()),
+            Map.entry("tdnf", new TdnfPackageManager())
     );
 
     public static Map<String, PackageManagerInterface> detectPackageManagers(){
