@@ -21,7 +21,8 @@ public class PackageManagerDetector {
             Map.entry("pamac", new PacmanPackageManager()),
             Map.entry("yay", new YayPackageManager()),
             Map.entry("paru", new ParuPackageManager()),
-            Map.entry("pikaur", new PikaurPackageManager())
+            Map.entry("pikaur", new PikaurPackageManager()),
+            Map.entry("trizen", new TrizenPackageManager())
     );
 
     public static Map<String, PackageManagerInterface> detectPackageManagers(){
