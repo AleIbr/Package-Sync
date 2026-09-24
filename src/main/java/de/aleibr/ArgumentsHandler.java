@@ -30,6 +30,10 @@ public class ArgumentsHandler {
                 .argName("FILE")
                 .desc("imports all packages within the YML file")
                 .get();
+        Option detect = Option.builder("D")
+                .longOpt("detect")
+                .desc("shows all detected package managers")
+                .get();
         Option help = Option.builder("H")
                 .longOpt("help")
                 .desc("showing all existing commands")
@@ -45,6 +49,7 @@ public class ArgumentsHandler {
         operations.addOption(explicitExport);
         operations.addOption(dependencyExport);
         operations.addOption(importPackages);
+        operations.addOption(detect);
         operations.addOption(help);
         operations.setRequired(true);
 
@@ -89,6 +94,9 @@ public class ArgumentsHandler {
                         }else{
                             helper.importPackages(cmd.getOptionValue("import"));
                         }
+                        break;
+                    case "detect":
+                        helper.detect();
                         break;
                     case "help":
                         HelpFormatter helpFormatter = new HelpFormatter();
