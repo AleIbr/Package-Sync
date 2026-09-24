@@ -59,4 +59,8 @@ public class ManagerHelper {
         }
     }
 
+    public void detect(){
+        System.out.println(availablePackageManagers.keySet());
+    }
+
 }
