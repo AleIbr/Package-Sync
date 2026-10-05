@@ -87,24 +87,20 @@ jobs:
       - name: Build Debian package
         shell: bash
         run: |
-          VERSION="${{ steps.project.outputs.version }}" 
-          
-          mkdir -p target/dist 
-          
-          jpackage \ 
-            --type deb \ 
-            --name packagesync \ 
-            --app-version "$VERSION" \ 
-            --vendor "aleibr" \ 
-            --description "A CLI tool for synchronizing packages" \ 
-            --input target/jpackage-input \ 
-            --main-jar "packagesync-${VERSION}.jar" \ 
-            --main-class "de.aleibr.packagesync.Main" \ 
-            --dest target/dist \ 
-            --linux-package-name packagesync \ 
-            --linux-app-category Utility \ 
-            --linux-deb-maintainer "aleibr" \ 
-            --linux-app-release 1 
+          VERSION="${{ steps.project.outputs.version }}"
+
+          mkdir -p "target/dist"
+
+          jpackage \
+          --type deb \
+          --name packagesync \
+          --app-version "$VERSION" \
+          --vendor "aleibr" \
+          --description "A CLI tool for synchronizing packages" \
+          --input "target/jpackage-input" \
+          --main-jar "packagesync-${VERSION}.jar" \
+          --main-class "de.aleibr.packagesync.Main" \
+          --dest "target/dist"
 
       # ------------------------------------------------------------
       # Rename JAR to a simple release filename
@@ -112,12 +108,13 @@ jobs:
       - name: Prepare release artifacts
         shell: bash
         run: |
-          VERSION="${{ steps.project.outputs.version }}" 
-          
-          cp "target/packagesync-${VERSION}.jar" \ 
-             "target/dist/packagesync-${VERSION}.jar" 
-          
-          ls -lh target/dist 
+          VERSION="${{ steps.project.outputs.version }}"
+
+          cp target/jpackage-input/*.jar \
+          "target/dist/packagesync-${VERSION}.jar"
+      
+          echo "Release artifacts:"
+          ls -lh target/dist
 
       # ------------------------------------------------------------
       # Create GitHub Release and upload artifacts
@@ -126,10 +123,22 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          VERSION="${{ steps.project.outputs.version }}" 
-          
-          gh release create "$GITHUB_REF_NAME" \ 
-          "target/dist/packagesync-${VERSION}.jar" \ 
-          target/dist/*.deb \ 
-          --title "PackageSync ${VERSION}" \ 
-          --generate-notes
+          VERSION="${{ steps.project.outputs.version }}"
+
+          JAR="target/dist/packagesync-${VERSION}.jar"
+          DEB=$(find target/dist -maxdepth 1 -type f -name '*.deb' -print -quit)
+      
+          if [ -z "$DEB" ]; then
+            echo "ERROR: No .deb package found!"
+            ls -lah target/dist
+            exit 1
+          fi
+      
+          echo "JAR: $JAR"
+          echo "DEB: $DEB"
+      
+          gh release create "$GITHUB_REF_NAME" \
+            "$JAR" \
+            "$DEB" \
+            --title "PackageSync ${VERSION}" \
+            --generate-notes
