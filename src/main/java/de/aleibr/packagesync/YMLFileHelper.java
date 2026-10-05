@@ -1,4 +1,4 @@
-package de.aleibr;
+package de.aleibr.packagesync;
 
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -14,7 +14,6 @@ public class YMLFileHelper {
     public static void createYMLFile(Map<String, List<String>> packages, String name, String filePath){
         DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-
         Yaml yaml = new Yaml(options);
         try(FileWriter writer = new FileWriter(filePath  + name + ".yml")){
             yaml.dump(packages, writer);

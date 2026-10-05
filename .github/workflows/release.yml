@@ -1,0 +1,131 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    steps:
+      # ------------------------------------------------------------
+      # Checkout source
+      # ------------------------------------------------------------
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      # ------------------------------------------------------------
+      # Install Java 21
+      # ------------------------------------------------------------
+      - name: Set up Java 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      # ------------------------------------------------------------
+      # Get Maven project version
+      # ------------------------------------------------------------
+      - name: Get project version
+        id: project
+        shell: bash
+        run: |
+          VERSION=$(./mvnw help:evaluate \
+          -Dexpression=project.version \
+          -q \
+          -DforceStdout)
+          
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT" 
+          echo "Building version $VERSION" 
+
+      # ------------------------------------------------------------
+      # Making sure the Git tag matches the Maven version
+      # ------------------------------------------------------------
+      - name: Verify version
+        shell: bash
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#v}" 
+          POM_VERSION="${{ steps.project.outputs.version }}" 
+          
+          if [ "$TAG_VERSION" != "$POM_VERSION" ]; then 
+            echo "Version mismatch!" 
+            echo "Git tag: $TAG_VERSION" 
+            echo "pom.xml: $POM_VERSION" 
+            exit 1 
+          fi 
+
+      # ------------------------------------------------------------
+      # Build executable/fat JAR
+      # ------------------------------------------------------------
+      - name: Build JAR
+        run: ./mvnw --batch-mode clean package
+
+      # ------------------------------------------------------------
+      # Prepare input for jpackage
+      # ------------------------------------------------------------
+      - name: Prepare jpackage input
+        shell: bash
+        run: |
+          VERSION="${{ steps.project.outputs.version }}" 
+          
+          mkdir -p target/jpackage-input 
+          
+          cp "target/packagesync-${VERSION}.jar" \ 
+              target/jpackage-input/
+
+      # ------------------------------------------------------------
+      # Build Debian package
+      # ------------------------------------------------------------
+      - name: Build Debian package
+        shell: bash
+        run: |
+          VERSION="${{ steps.project.outputs.version }}" 
+          
+          mkdir -p target/dist 
+          
+          jpackage \ 
+            --type deb \ 
+            --name packagesync \ 
+            --app-version "$VERSION" \ 
+            --vendor "aleibr" \ 
+            --description "A CLI tool for synchronizing packages" \ 
+            --input target/jpackage-input \ 
+            --main-jar "packagesync-${VERSION}.jar" \ 
+            --main-class "de.aleibr.packagesync.Main" \ 
+            --dest target/dist \ 
+            --linux-package-name packagesync \ 
+            --linux-app-category Utility \ 
+            --linux-deb-maintainer "aleibr" \ 
+            --linux-app-release 1 
+
+      # ------------------------------------------------------------
+      # Rename JAR to a simple release filename
+      # ------------------------------------------------------------
+      - name: Prepare release artifacts
+        shell: bash
+        run: |
+          VERSION="${{ steps.project.outputs.version }}" 
+          
+          cp "target/packagesync-${VERSION}.jar" \ 
+             "target/dist/packagesync-${VERSION}.jar" 
+          
+          ls -lh target/dist 
+
+      # ------------------------------------------------------------
+      # Create GitHub Release and upload artifacts
+      # ------------------------------------------------------------
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION="${{ steps.project.outputs.version }}" 
+          
+          gh release create "$GITHUB_REF_NAME" \ 
+          "target/dist/packagesync-${VERSION}.jar" \ 
+          target/dist/*.deb \ 
+          --title "PackageSync ${VERSION}" \ 
+          --generate-notes

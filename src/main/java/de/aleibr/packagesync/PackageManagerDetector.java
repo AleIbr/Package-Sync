@@ -1,4 +1,6 @@
-package de.aleibr.PackageManagers;
+package de.aleibr.packagesync;
+
+import de.aleibr.packagesync.PackageManagers.*;
 
 import java.io.IOException;
 import java.util.HashMap;

@@ -1,18 +1,18 @@
-package de.aleibr.PackageManagers;
+package de.aleibr.packagesync.PackageManagers;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class ZypperPackageManager implements PackageManagerInterface{
+public class MicrodnfPackageManager implements PackageManagerInterface{
 
     @Override
     public Map<String, List<String>> exportExplicit(){
         try{
-            Process process = new ProcessBuilder("rpm", "-qa", "--qf", "%{NAME}\\n").start();
+            Process process = new ProcessBuilder("microdnf", "list", "installed").start();
             process.waitFor();
-            return Map.of("zypper|explicit", process.inputReader().lines().collect(Collectors.toList()));
+            return Map.of("microdnf|explicit", process.inputReader().lines().collect(Collectors.toList()));
         }catch(IOException | InterruptedException e){
             Thread.currentThread().interrupt();
             return  Map.of();
@@ -24,7 +24,7 @@ public class ZypperPackageManager implements PackageManagerInterface{
         try{
             Process process;
             for(String currentPackage : packages){
-                process = new ProcessBuilder("sudo", "zypper", "--non-interactive", "install", currentPackage).inheritIO().start();
+                process = new ProcessBuilder("sudo", "microdnf", "install", "-y", currentPackage).inheritIO().start();
                 process.waitFor();
             }
         }catch(IOException | InterruptedException e){

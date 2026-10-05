@@ -1,11 +1,11 @@
-package de.aleibr;
+package de.aleibr.packagesync;
 
-import de.aleibr.PackageManagers.ManagerHelper;
 import org.apache.commons.cli.*;
 
 public class ArgumentsHandler {
 
     public static void argsHandler(String[] args){
+
         Option export = Option.builder("E")
                 .longOpt("export")
                 .optionalArg(true)
@@ -59,10 +59,12 @@ public class ArgumentsHandler {
         Options options = new Options();
         options.addOptionGroup(operations);
         options.addOptionGroup(flags);
+
         ManagerHelper helper = new ManagerHelper();
 
         CommandLineParser parser = new DefaultParser();
         try{
+
             CommandLine cmd = parser.parse(options, args);
 
             for(Option option : cmd.getOptions()){
@@ -104,6 +106,7 @@ public class ArgumentsHandler {
                         break;
                 }
             }
+
         }catch(ParseException e){
             HelpFormatter helpFormatter = new HelpFormatter();
             helpFormatter.printHelp("help", options);

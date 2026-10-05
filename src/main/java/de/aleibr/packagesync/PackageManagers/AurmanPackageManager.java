@@ -1,18 +1,18 @@
-package de.aleibr.PackageManagers;
+package de.aleibr.packagesync.PackageManagers;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class PacmanPackageManager implements PackageManagerInterface{
+public class AurmanPackageManager implements PackageManagerInterface{
 
     @Override
-    public Map<String, List<String>> exportExplicit() {
+    public Map<String, List<String>> exportExplicit(){
         try{
-            Process process = new ProcessBuilder("pacman", "-Qqe").start();
+            Process process = new ProcessBuilder("aurman", "-Qeq").start();
             process.waitFor();
-            return Map.of("pacman|explicit", process.inputReader().lines().collect(Collectors.toList()));
+            return Map.of("aurman|explicit", process.inputReader().lines().collect(Collectors.toList()));
         }catch(IOException | InterruptedException e){
             Thread.currentThread().interrupt();
             return  Map.of();
@@ -20,11 +20,11 @@ public class PacmanPackageManager implements PackageManagerInterface{
     }
 
     @Override
-    public Map<String, List<String>> exportDependencies() {
+    public Map<String, List<String>>exportDependencies(){
         try{
-            Process process = new ProcessBuilder("pacman", "-Qqd").start();
+            Process process = new ProcessBuilder("aurman", "-Qdq").start();
             process.waitFor();
-            return Map.of("pacman|dependencies", process.inputReader().lines().collect(Collectors.toList()));
+            return Map.of("aurman|dependencies", process.inputReader().lines().collect(Collectors.toList()));
         }catch(IOException | InterruptedException e){
             Thread.currentThread().interrupt();
             return  Map.of();
@@ -36,7 +36,7 @@ public class PacmanPackageManager implements PackageManagerInterface{
         try{
             Process process;
             for(String currentPackage : packages){
-                process = new ProcessBuilder("sudo", "pacman", "-S", "--noconfirm", currentPackage).inheritIO().start();
+                process = new ProcessBuilder("sudo", "aurman", "-S", "--noconfirm", currentPackage).inheritIO().start();
                 process.waitFor();
             }
         }catch(IOException | InterruptedException e){

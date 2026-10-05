@@ -1,4 +1,4 @@
-package de.aleibr;
+package de.aleibr.packagesync;
 
 public class Main {
     public static void main(String[] args) {
