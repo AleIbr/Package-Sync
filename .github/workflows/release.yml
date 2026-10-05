@@ -10,6 +10,10 @@ permissions:
 
 jobs:
   release:
+
+    name: Build and release
+    runs-on: ubuntu-latest
+
     steps:
       # ------------------------------------------------------------
       # Checkout source
