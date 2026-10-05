@@ -87,29 +87,42 @@ jobs:
       - name: Build Debian package
         shell: bash
         run: |
-          VERSION="${{ steps.project.outputs.version }}"
-
-          mkdir -p "target/dist"
-          mkdir -p "target/jpackage-resources"
-
-          cat > "target/jpackage-resources/postinstall.sh" <<'EOF'
-          #!/bin/sh
-          ln -sf /opt/packagesync/bin/packagesync /usr/bin/packagesync
-          EOF
+          VERSION="${{ steps.project.outputs.version }}" 
           
-          chmod +x "target/jpackage-resources/postinstall.sh"
+          mkdir -p "target/dist" 
           
-          jpackage \
-            --type deb \
-            --name packagesync \
-            --app-version "$VERSION" \
-            --vendor "aleibr" \
-            --description "A CLI tool for synchronizing packages" \
-            --input "target/jpackage-input" \
-            --main-jar "packagesync-${VERSION}.jar" \
-            --main-class "de.aleibr.packagesync.Main" \
-            --resource-dir "target/jpackage-resources" \
-            --dest "target/dist"
+          jpackage \ 
+            --type deb \ 
+            --name packagesync \ 
+            --app-version "$VERSION" \ 
+            --vendor "aleibr" \ 
+            --description "A CLI tool for synchronizing packages" \ 
+            --input "target/jpackage-input" \ 
+            --main-jar "packagesync-${VERSION}.jar" \ 
+            --main-class "de.aleibr.packagesync.Main" \ 
+            --dest "target/dist" 
+          
+          DEB=$(find target/dist -maxdepth 1 -type f -name '*.deb' -print -quit) 
+          
+          mkdir -p target/deb-extract 
+          mkdir -p target/deb-control 
+          
+          dpkg-deb -x "$DEB" target/deb-extract 
+          dpkg-deb -e "$DEB" target/deb-control 
+          
+          cat > target/deb-control/postinst <<'EOF'
+          #!/bin/sh 
+          ln -sf /opt/packagesync/bin/packagesync 
+          /usr/bin/packagesync 
+          exit 0 
+          EOF 
+          
+          chmod 755 target/deb-control/postinst 
+          rm "$DEB" 
+          
+          dpkg-deb -b \ 
+            target/deb-extract \ 
+            "target/dist/packagesync_${VERSION}-1_amd64.deb"
 
       # ------------------------------------------------------------
       # Rename JAR to a simple release filename
