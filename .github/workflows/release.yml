@@ -90,17 +90,26 @@ jobs:
           VERSION="${{ steps.project.outputs.version }}"
 
           mkdir -p "target/dist"
+          mkdir -p "target/jpackage-resources"
 
+          cat > "target/jpackage-resources/postinstall" <<'EOF'
+          #!/bin/sh
+          ln -sf /opt/packagesync/bin/packagesync /usr/bin/packagesync
+          EOF
+          
+          chmod +x "target/jpackage-resources/postinstall"
+          
           jpackage \
-          --type deb \
-          --name packagesync \
-          --app-version "$VERSION" \
-          --vendor "aleibr" \
-          --description "A CLI tool for synchronizing packages" \
-          --input "target/jpackage-input" \
-          --main-jar "packagesync-${VERSION}.jar" \
-          --main-class "de.aleibr.packagesync.Main" \
-          --dest "target/dist"
+            --type deb \
+            --name packagesync \
+            --app-version "$VERSION" \
+            --vendor "aleibr" \
+            --description "A CLI tool for synchronizing packages" \
+            --input "target/jpackage-input" \
+            --main-jar "packagesync-${VERSION}.jar" \
+            --main-class "de.aleibr.packagesync.Main" \
+            --resource-dir "target/jpackage-resources" \
+            --dest "target/dist"
 
       # ------------------------------------------------------------
       # Rename JAR to a simple release filename
