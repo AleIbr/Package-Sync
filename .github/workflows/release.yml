@@ -74,12 +74,12 @@ jobs:
       - name: Prepare jpackage input
         shell: bash
         run: |
-          VERSION="${{ steps.project.outputs.version }}" 
+          VERSION="${{ steps.project.outputs.version }}"
           
-          mkdir -p target/jpackage-input 
+          mkdir -p "target/jpackage-input" 
           
-          cp "target/packagesync-${VERSION}.jar" \ 
-              target/jpackage-input/
+          cp "target/packagesync-${VERSION}.jar" \
+             "target/jpackage-input/packagesync-${VERSION}.jar"
 
       # ------------------------------------------------------------
       # Build Debian package
