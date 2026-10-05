@@ -87,42 +87,61 @@ jobs:
       - name: Build Debian package
         shell: bash
         run: |
-          VERSION="${{ steps.project.outputs.version }}" 
+          VERSION="${{ steps.project.outputs.version }}"
           
-          mkdir -p "target/dist" 
+          mkdir -p "target/dist"
           
-          jpackage \ 
-            --type deb \ 
-            --name packagesync \ 
-            --app-version "$VERSION" \ 
-            --vendor "aleibr" \ 
-            --description "A CLI tool for synchronizing packages" \ 
-            --input "target/jpackage-input" \ 
-            --main-jar "packagesync-${VERSION}.jar" \ 
-            --main-class "de.aleibr.packagesync.Main" \ 
-            --dest "target/dist" 
+          jpackage \
+            --type deb \
+            --name packagesync \
+            --app-version "$VERSION" \
+            --vendor "aleibr" \
+            --description "A CLI tool for synchronizing packages" \
+            --input "target/jpackage-input" \
+            --main-jar "packagesync-${VERSION}.jar" \
+            --main-class "de.aleibr.packagesync.Main" \
+            --dest "target/dist"
           
-          DEB=$(find target/dist -maxdepth 1 -type f -name '*.deb' -print -quit) 
+          DEB=$(find target/dist -maxdepth 1 -type f -name '*.deb' -print -quit)
           
-          mkdir -p target/deb-extract 
-          mkdir -p target/deb-control 
+          if [ -z "$DEB" ]; then
+            echo "ERROR: jpackage did not create a .deb"
+            exit 1
+          fi
           
-          dpkg-deb -x "$DEB" target/deb-extract 
-          dpkg-deb -e "$DEB" target/deb-control 
+          echo "Created: $DEB"
           
-          cat > target/deb-control/postinst <<'EOF'
-          #!/bin/sh 
-          ln -sf /opt/packagesync/bin/packagesync 
-          /usr/bin/packagesync 
-          exit 0 
-          EOF 
+          rm -rf target/deb-work
+          mkdir -p target/deb-work/root
+          mkdir -p target/deb-work/control
           
-          chmod 755 target/deb-control/postinst 
-          rm "$DEB" 
+          dpkg-deb -x "$DEB" target/deb-work/root
+          dpkg-deb -e "$DEB" target/deb-work/control
           
-          dpkg-deb -b \ 
-            target/deb-extract \ 
-            "target/dist/packagesync_${VERSION}-1_amd64.deb"
+
+          cat > target/deb-work/control/postinst <<'EOF'
+          #!/bin/sh
+          set -e
+    
+          ln -sf /opt/packagesync/bin/packagesync /usr/bin/packagesync
+    
+          exit 0
+          EOF
+          
+          chmod 755 target/deb-work/control/postinst
+          
+          # Rebuild the Debian package.
+          mv "$DEB" "${DEB}.original"
+          
+          dpkg-deb -b \
+            target/deb-work/root \
+            "$DEB"
+          
+          rm "${DEB}.original"
+          
+          echo "Final Debian package:"
+          ls -lh "$DEB"
+      
 
       # ------------------------------------------------------------
       # Rename JAR to a simple release filename
