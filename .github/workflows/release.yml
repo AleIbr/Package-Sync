@@ -108,12 +108,13 @@ jobs:
       - name: Prepare release artifacts
         shell: bash
         run: |
-          VERSION="${{ steps.project.outputs.version }}" 
-          
-          cp "target/packagesync-${VERSION}.jar" \ 
-             "target/dist/packagesync-${VERSION}.jar" 
-          
-          ls -lh target/dist 
+          VERSION="${{ steps.project.outputs.version }}"
+
+          cp target/jpackage-input/*.jar \
+          "target/dist/packagesync-${VERSION}.jar"
+      
+          echo "Release artifacts:"
+          ls -lh target/dist
 
       # ------------------------------------------------------------
       # Create GitHub Release and upload artifacts
