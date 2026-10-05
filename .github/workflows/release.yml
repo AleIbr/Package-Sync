@@ -123,10 +123,22 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          VERSION="${{ steps.project.outputs.version }}" 
-          
-          gh release create "$GITHUB_REF_NAME" \ 
-          "target/dist/packagesync-${VERSION}.jar" \ 
-          target/dist/*.deb \ 
-          --title "PackageSync ${VERSION}" \ 
-          --generate-notes
+          VERSION="${{ steps.project.outputs.version }}"
+
+          JAR="target/dist/packagesync-${VERSION}.jar"
+          DEB=$(find target/dist -maxdepth 1 -type f -name '*.deb' -print -quit)
+      
+          if [ -z "$DEB" ]; then
+            echo "ERROR: No .deb package found!"
+            ls -lah target/dist
+            exit 1
+          fi
+      
+          echo "JAR: $JAR"
+          echo "DEB: $DEB"
+      
+          gh release create "$GITHUB_REF_NAME" \
+            "$JAR" \
+            "$DEB" \
+            --title "PackageSync ${VERSION}" \
+            --generate-notes
