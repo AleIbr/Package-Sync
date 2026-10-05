@@ -1,4 +1,4 @@
-package de.aleibr.PackageManagers;
+package de.aleibr.packagesync.PackageManagers;
 
 import java.io.IOException;
 import java.util.List;

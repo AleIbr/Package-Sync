@@ -1,18 +1,18 @@
-package de.aleibr.PackageManagers;
+package de.aleibr.packagesync.PackageManagers;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class TrizenPackageManager implements PackageManagerInterface{
+public class AptPackageManager implements PackageManagerInterface{
 
     @Override
-    public Map<String, List<String>> exportExplicit(){
+    public Map<String, List<String>>exportExplicit(){
         try{
-            Process process = new ProcessBuilder("trizen", "-Qeq").start();
+            Process process = new ProcessBuilder("apt-mark", "showmanual").start();
             process.waitFor();
-            return Map.of("trizen|explicit", process.inputReader().lines().collect(Collectors.toList()));
+            return Map.of("apt|explicit", process.inputReader().lines().collect(Collectors.toList()));
         }catch(IOException | InterruptedException e){
             Thread.currentThread().interrupt();
             return  Map.of();
@@ -22,9 +22,9 @@ public class TrizenPackageManager implements PackageManagerInterface{
     @Override
     public Map<String, List<String>>exportDependencies(){
         try{
-            Process process = new ProcessBuilder("trizen", "-Qdq").start();
+            Process process = new ProcessBuilder("apt-mark", "showauto").start();
             process.waitFor();
-            return Map.of("trizen|dependencies", process.inputReader().lines().collect(Collectors.toList()));
+            return Map.of("apt|dependencies", process.inputReader().lines().collect(Collectors.toList()));
         }catch(IOException | InterruptedException e){
             Thread.currentThread().interrupt();
             return  Map.of();
@@ -36,7 +36,7 @@ public class TrizenPackageManager implements PackageManagerInterface{
         try{
             Process process;
             for(String currentPackage : packages){
-                process = new ProcessBuilder("sudo", "trizen", "-S", "--noconfirm", currentPackage).inheritIO().start();
+                process = new ProcessBuilder("sudo", "apt", "install", "-y", currentPackage).inheritIO().start();
                 process.waitFor();
             }
         }catch(IOException | InterruptedException e){

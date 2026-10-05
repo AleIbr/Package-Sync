@@ -1,18 +1,18 @@
-package de.aleibr.PackageManagers;
+package de.aleibr.packagesync.PackageManagers;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class AptitudePackageManager implements PackageManagerInterface{
+public class DnfPackageManager implements PackageManagerInterface{
 
     @Override
     public Map<String, List<String>> exportExplicit(){
         try{
-            Process process = new ProcessBuilder("aptitude", "search", "~i").start();
+            Process process = new ProcessBuilder("dnf", "list", "--installed").start();
             process.waitFor();
-            return Map.of("aptitude|explicit", process.inputReader().lines().collect(Collectors.toList()));
+            return Map.of("dnf|explicit", process.inputReader().lines().collect(Collectors.toList()));
         }catch(IOException | InterruptedException e){
             Thread.currentThread().interrupt();
             return  Map.of();
@@ -22,9 +22,9 @@ public class AptitudePackageManager implements PackageManagerInterface{
     @Override
     public Map<String, List<String>>exportDependencies(){
         try{
-            Process process = new ProcessBuilder("aptitude", "search", "~i", "?automatic").start();
+            Process process = new ProcessBuilder("dnf", "repoquery", "--installed", "--qf", "%{name}", "--recursive", "--whatrequires").start();
             process.waitFor();
-            return Map.of("aptitude|dependencies", process.inputReader().lines().collect(Collectors.toList()));
+            return Map.of("dnf|dependencies", process.inputReader().lines().collect(Collectors.toList()));
         }catch(IOException | InterruptedException e){
             Thread.currentThread().interrupt();
             return  Map.of();
@@ -36,7 +36,7 @@ public class AptitudePackageManager implements PackageManagerInterface{
         try{
             Process process;
             for(String currentPackage : packages){
-                process = new ProcessBuilder("sudo", "aptitude", "install", "-y", currentPackage).inheritIO().start();
+                process = new ProcessBuilder("sudo", "dnf", "install", "-y", currentPackage).inheritIO().start();
                 process.waitFor();
             }
         }catch(IOException | InterruptedException e){

@@ -1,6 +1,6 @@
-package de.aleibr.PackageManagers;
+package de.aleibr.packagesync;
 
-import de.aleibr.YMLFileHelper;
+import de.aleibr.packagesync.PackageManagers.PackageManagerInterface;
 
 import java.util.HashMap;
 import java.util.List;
@@ -60,7 +60,9 @@ public class ManagerHelper {
     }
 
     public void detect(){
-        System.out.println(availablePackageManagers.keySet());
+        for(String packageManager : availablePackageManagers.keySet()){
+            System.out.println(packageManager);
+        }
     }
 
 }
