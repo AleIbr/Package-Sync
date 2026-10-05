@@ -6,7 +6,7 @@
 
     <groupId>de.aleibr</groupId>
     <artifactId>packagesync</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
 
     <name>Package-Sync</name>
     <description>Package-Sync is a CLI tool for Linux distributions to export and import packages.</description>
