@@ -112,14 +112,11 @@ jobs:
           echo "Created: $DEB"
           
           rm -rf target/deb-work
-          mkdir -p target/deb-work/root
-          mkdir -p target/deb-work/control
+          mkdir -p target/deb-work
           
-          dpkg-deb -x "$DEB" target/deb-work/root
-          dpkg-deb -e "$DEB" target/deb-work/control
+          dpkg-deb -R "$DEB" target/deb-work
           
-
-          cat > target/deb-work/control/postinst <<'EOF'
+          cat > target/deb-work/DEBIAN/postinst <<'EOF'
           #!/bin/sh
           set -e
     
@@ -128,20 +125,19 @@ jobs:
           exit 0
           EOF
           
-          chmod 755 target/deb-work/control/postinst
+          chmod 755 target/deb-work/DEBIAN/postinst
           
-          # Rebuild the Debian package.
+          # Rebuild the package.
           mv "$DEB" "${DEB}.original"
           
           dpkg-deb -b \
-            target/deb-work/root \
+            target/deb-work \
             "$DEB"
           
           rm "${DEB}.original"
           
           echo "Final Debian package:"
           ls -lh "$DEB"
-      
 
       # ------------------------------------------------------------
       # Rename JAR to a simple release filename
