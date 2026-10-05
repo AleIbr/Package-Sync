@@ -92,12 +92,12 @@ jobs:
           mkdir -p "target/dist"
           mkdir -p "target/jpackage-resources"
 
-          cat > "target/jpackage-resources/postinstall" <<'EOF'
+          cat > "target/jpackage-resources/postinstall.sh" <<'EOF'
           #!/bin/sh
           ln -sf /opt/packagesync/bin/packagesync /usr/bin/packagesync
           EOF
           
-          chmod +x "target/jpackage-resources/postinstall"
+          chmod +x "target/jpackage-resources/postinstall.sh"
           
           jpackage \
             --type deb \
