@@ -87,24 +87,20 @@ jobs:
       - name: Build Debian package
         shell: bash
         run: |
-          VERSION="${{ steps.project.outputs.version }}" 
-          
-          mkdir -p target/dist 
-          
-          jpackage \ 
-            --type deb \ 
-            --name packagesync \ 
-            --app-version "$VERSION" \ 
-            --vendor "aleibr" \ 
-            --description "A CLI tool for synchronizing packages" \ 
-            --input target/jpackage-input \ 
-            --main-jar "packagesync-${VERSION}.jar" \ 
-            --main-class "de.aleibr.packagesync.Main" \ 
-            --dest target/dist \ 
-            --linux-package-name packagesync \ 
-            --linux-app-category Utility \ 
-            --linux-deb-maintainer "aleibr" \ 
-            --linux-app-release 1 
+          VERSION="${{ steps.project.outputs.version }}"
+
+          mkdir -p "target/dist"
+
+          jpackage \
+          --type deb \
+          --name packagesync \
+          --app-version "$VERSION" \
+          --vendor "aleibr" \
+          --description "A CLI tool for synchronizing packages" \
+          --input "target/jpackage-input" \
+          --main-jar "packagesync-${VERSION}.jar" \
+          --main-class "de.aleibr.packagesync.Main" \
+          --dest "target/dist"
 
       # ------------------------------------------------------------
       # Rename JAR to a simple release filename
