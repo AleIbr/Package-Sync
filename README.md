@@ -7,3 +7,4 @@ Coming soon. Please use --help or -H for now.
 
 # Build
 You can build it yourself with ` ./mvnw clean package ` or use the already build jar in releases.
+
