@@ -3,10 +3,7 @@ Package-Sync is a CLI tool for exporting and importing packages between linux di
 It does this by detecting all currently installed package managers and either exporting all packages to a yml file or installing all packages from such a file.
 
 # Getting Started
-There is no real way of using it until it can be build.
+Coming soon. Please use --help or -H for now.
 
-# Build and Test
-There are no build instructions as of yet.
-
-# Licenses
-There are currently no licenses
+# Build
+You can build it yourself with ` ./mvnw clean package ` or use the already build jar in releases.
