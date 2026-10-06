@@ -88,19 +88,56 @@ jobs:
         shell: bash
         run: |
           VERSION="${{ steps.project.outputs.version }}"
-
+          
           mkdir -p "target/dist"
-
+          
           jpackage \
-          --type deb \
-          --name packagesync \
-          --app-version "$VERSION" \
-          --vendor "aleibr" \
-          --description "A CLI tool for synchronizing packages" \
-          --input "target/jpackage-input" \
-          --main-jar "packagesync-${VERSION}.jar" \
-          --main-class "de.aleibr.packagesync.Main" \
-          --dest "target/dist"
+            --type deb \
+            --name packagesync \
+            --app-version "$VERSION" \
+            --vendor "aleibr" \
+            --description "A CLI tool for synchronizing packages" \
+            --input "target/jpackage-input" \
+            --main-jar "packagesync-${VERSION}.jar" \
+            --main-class "de.aleibr.packagesync.Main" \
+            --dest "target/dist"
+          
+          DEB=$(find target/dist -maxdepth 1 -type f -name '*.deb' -print -quit)
+          
+          if [ -z "$DEB" ]; then
+            echo "ERROR: jpackage did not create a .deb"
+            exit 1
+          fi
+          
+          echo "Created: $DEB"
+          
+          rm -rf target/deb-work
+          mkdir -p target/deb-work
+          
+          dpkg-deb -R "$DEB" target/deb-work
+          
+          cat > target/deb-work/DEBIAN/postinst <<'EOF'
+          #!/bin/sh
+          set -e
+    
+          ln -sf /opt/packagesync/bin/packagesync /usr/bin/packagesync
+    
+          exit 0
+          EOF
+          
+          chmod 755 target/deb-work/DEBIAN/postinst
+          
+          # Rebuild the package.
+          mv "$DEB" "${DEB}.original"
+          
+          dpkg-deb -b \
+            target/deb-work \
+            "$DEB"
+          
+          rm "${DEB}.original"
+          
+          echo "Final Debian package:"
+          ls -lh "$DEB"
 
       # ------------------------------------------------------------
       # Rename JAR to a simple release filename
