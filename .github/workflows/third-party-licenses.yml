@@ -1,0 +1,77 @@
+name: Third-party license bundle
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  licenses:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out release tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      - name: Set up Java and Maven cache
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Build and download dependency licenses
+        run: |
+          if [ -f ./mvnw ]; then
+            chmod +x ./mvnw
+            MVN=./mvnw
+          else
+            MVN=mvn
+          fi
+
+          "$MVN" -B clean package \
+            org.codehaus.mojo:license-maven-plugin:2.7.1:aggregate-download-licenses \
+            org.codehaus.mojo:license-maven-plugin:2.7.1:aggregate-add-third-party \
+            -Dlicense.errorRemedy=xmlOutput
+
+      - name: Assemble license bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mkdir -p dist/third-party-licenses
+
+          REPORT="target/generated-sources/license/THIRD-PARTY.txt"
+          LICENSES="target/generated-resources/licenses"
+
+          if [ ! -f "$REPORT" ]; then
+            echo "::error::Third-party report was not generated"
+            exit 1
+          fi
+
+          if [ ! -d "$LICENSES" ]; then
+            echo "::error::Downloaded license directory was not generated"
+            exit 1
+          fi
+
+          cp "$REPORT" dist/third-party-licenses/
+          cp -R "$LICENSES"/. dist/third-party-licenses/
+
+          cp README.md dist/third-party-licenses/ 2>/dev/null || true
+
+          cd dist
+          zip -qr ../THIRD-PARTY-LICENSES.zip third-party-licenses
+
+      - name: Attach bundle to GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          gh release upload "$RELEASE_TAG" \
+            THIRD-PARTY-LICENSES.zip \
+            --repo "$GH_REPO"
